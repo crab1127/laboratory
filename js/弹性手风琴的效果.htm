@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+	<title>弹性手风琴效果</title>
+	<style type="text/css">
+		*{margin:0;padding:0;border:none;}
+		#imgMenu{width:600px;height:350px;border:10px solid #d8d8d8;margin:40px auto;overflow:hidden;}
+		#imgMenu #content{width:800px;float:left;}
+		#imgMenu #content div{float:left;overflow:hidden;}
+		#imgMenu #content div img{border-left:5px solid #deb887}
+	</style>
+</head>
+<body>
+<div id="imgMenu">
+	<div id="content">
+		<div><img src="image/1.jpg" alt="1" /></div>
+		<div><img src="image/2.jpg" alt="2" /></div>
+		<div><img src="image/3.jpg" alt="3" /></div>
+		<div><img src="image/4.jpg" alt="4" /></div>
+		<div><img src="image/5.jpg" alt="5" /></div>
+		<div><img src="image/6.jpg" alt="6" /></div>
+	</div>
+</div>
+<script type="text/javascript">
+window.onload = function(){
+	var time = null;
+	function id(idName){
+		return document.getElementById(idName);
+	};
+	var content = id("content");
+	var pics = id("content").getElementsByTagName("div");
+	function slide(obj){
+		var speed = obj.offsetWidth;
+		if(speed == 400) return false;
+		//alert(speed);
+		clearInterval(time);
+		time = setInterval(function(){
+			for( var i = 0; i < pics.length; i++ ){
+				var speed2 = pics[i].offsetWidth;
+				alert(speed2);
+				if( pics[i].offsetWidth != 40){				
+					speed2 -= Math.ceil((speed2 - 40)/4);
+					pics[i].style.width = speed2 + 'px';
+				}
+			}
+			if(obj.offsetWidth != 400){
+				speed+= Math.ceil((400-speed)/4);
+				obj.style.width = speed + 'px';
+			}
+		},20);
+	}
+	for( var i = 0; i < pics.length; i++){
+		pics[i].style.width = 40 + 'px';
+		pics[0].style.width = 400 + 'px';
+		pics[i].onmouseover = function(){
+			slide(this);
+		}
+	}
+}
+</script>	
+</body>
+</html>
