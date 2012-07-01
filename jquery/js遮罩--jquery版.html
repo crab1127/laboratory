@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+	<title>js遮罩</title>
+	<style type="text/css">
+		*{margin:0;padding:0;}
+		body{height:3000px;}
+		#window{width:250px;height:300px;position:absolute;border:1px solid #000;z-index:100; background:#FFF; color:#000}
+		#close{width:10px; height:10px; position:absolute; top:0px; right:0px;}
+		#mark{ background:black; filter:alpha(opacity=50); opacity:0.5; position:absolute; left:0; top:0; z-index:99;}
+	</style>
+</head>
+<body>
+	<input type="button" value="登录" id="input1" />
+	<script type="text/javascript" src='jquery.js'></script>
+	<script type="text/javascript">
+		$(function(){
+			var oInt = document.getElementById("input1");
+			var oLogin = null;
+			var oMark = null;
+			var clientW = $(body).width();
+			var clientH = $(body).height();
+			$('#input1').click(function(){
+				var oLogin = '<div id="window"><p><label for="txt1">用户名<input type="text" id="txt1" /></label></p><p><label for="txt2">密码<input type="text" id="txt2" /></label></p><p><input type="submit"  /></p><div id="close">x</div></div>';
+				$(body).append(oLogin);
+				oLogin.style.left = (clientW() - oLogin.width())/2 + 'px';
+				oLogin.style.top = (clientH() - oLogin.height())/2 +'px';
+				oMark = document.createElement('div');
+				oMark.id = 'mark';
+				document.body.appendChild(oMark);
+				oMark.style.width = clientW() + 'px';
+				oMark.style.height = documentHeight() + 'px';
+				var oClose = document.getElementById('close');
+				oClose.onclick = function(){
+					document.body.removeChild(oLogin);
+					document.body.removeChild(oMark);
+				}
+			})
+			//窗口改变时，弹窗位置的改变
+			window.onscroll = window.onresize = function(){
+				if(oLogin){
+					oLogin.style.left = (clientW() - oLogin.width())/2 + 'px';
+					oLogin.style.top = (clientH() - oLogin.height())/2 + scrollY() + 'px';
+					oMark.style.width = clientW()+"px";
+					oMark.style.height = clientH()+"px";
+				}
+			}			
+		})
+		function scrollY()
+        {
+                return document.documentElement.scrollTop||document.body.scrollTop;
+        }
+	</script>
+</body>
+</html>
+
