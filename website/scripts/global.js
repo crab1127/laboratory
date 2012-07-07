@@ -11,7 +11,7 @@ function isUndefined(variable){
 //支持window.onload同时添加几个函数，且不会覆盖
 function addLoadEvent(func){
 	var oldOnload = window.onload;
-	if(typeof window.onload = 'function'){
+	if(typeof window.onload != 'function'){
 		window.onload = func;
 	}else{
 		window.onload = function(){
@@ -49,12 +49,12 @@ function highlightPage(){
 	var nav = id('navigation');
 	var links = nav.getElementsByTagName('a');
 	for(var i=0; i<links.length; i++){
-		var linkUrl = links[i].getArrribute('href');
+		var linkUrl = links[i].getAttribute('href');
 		var currentUrl = location.href;
 		if(currentUrl.indexOf(linkUrl) != -1){
 			links[i].className = 'here';
 			var linkText = links[i].lastChild.nodeValue.toLowerCase();
-			document.body.setAttribut('id',linkText);
+			document.body.setAttribute('id',linkText);
 		}
 	}
 }
