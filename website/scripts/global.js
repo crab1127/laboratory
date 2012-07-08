@@ -1,14 +1,14 @@
-//·µ»Øid
+//è¿”å›id
 function id(id){
 	return !id ? null : document.getElementById(id);
 }
 
-//ÅĞ¶Ï±äÁ¿ÊÇ·ñ´æÔÚ
+//åˆ¤æ–­å˜é‡æ˜¯å¦å­˜åœ¨
 function isUndefined(variable){
 	return typeof variable = 'undefined' ? true : false;
 }
 
-//Ö§³Öwindow.onloadÍ¬Ê±Ìí¼Ó¼¸¸öº¯Êı£¬ÇÒ²»»á¸²¸Ç
+//æ”¯æŒwindow.onloadåŒæ—¶æ·»åŠ å‡ ä¸ªå‡½æ•°ï¼Œä¸”ä¸ä¼šè¦†ç›–
 function addLoadEvent(func){
 	var oldOnload = window.onload;
 	if(typeof window.onload != 'function'){
@@ -21,7 +21,7 @@ function addLoadEvent(func){
 	}
 }
 
-//ÔÚÖ¸¶¨µÄÇ°Ãæ²åÈëÄÚÈİ
+//åœ¨æŒ‡å®šçš„å‰é¢æ’å…¥å†…å®¹
 function insertAfter(newElement,targetElement){
 	var parent = targetElement.parentNode;
 	if(parent.lastChild == targetElement){
@@ -31,7 +31,7 @@ function insertAfter(newElement,targetElement){
 	}
 }
 
-//Ìí¼ÓÑùÊ½
+//æ·»åŠ æ ·å¼
 function addClass(element,value){
 	if(!element.className){
 		element.className = value;
@@ -43,7 +43,7 @@ function addClass(element,value){
 	}
 }
 
-//µ¼º½¸ßÁÁ
+//å¯¼èˆªé«˜äº®
 function highlightPage(){
 	if(!id('navigation')) return false;
 	var nav = id('navigation');
@@ -59,4 +59,53 @@ function highlightPage(){
 	}
 }
 
+//åˆ‡æ¢æ˜¾ç¤ºçš„
+function showSection(id){
+	var divs = document.getElementsByTagName('div');
+	//alert('ss');
+	for(var i=0; i<divs.length; i++){
+		if(divs[i].className.indexOf('section') == -1) continue;
+			
+		if(divs[i].getAttribute('id') != id){
+			divs[i].style.display = 'block';
+		}else{
+			
+			divs[i].style.display = 'none';
+		}
+	}
+}
+
+//tab
+function tab(){
+	if(!id('internalnav')) return false;
+	var nav = id('internalnav');
+	var links = nav.getElementsByTagName('a');
+	for(var i=0; i<links.length; i++){
+		var sectionId = links[i].getAttribute('href').split('#')[1];
+		id(sectionId).style.display = 'none';
+		links[i].displayId = sectionId
+		links[i].onclick = function() {
+		showSection(this.displayId);
+		return false;
+    }		
+	}
+}
+
+//åˆ›å»ºå›¾ç‰‡åº“
+function preparePlaceholder(){
+	if(!id('imagegallery')) return false;
+	var description = document.createElement('p');
+	description.setAttribute('id','description');
+	var descText = document.createTextNode('é€‰æ‹©ä¸€ä¸ªå›¾åƒ');
+	description.appendChild(descText);
+	var placeholder = document.createElement('img');
+	placeholder.setAttribute('id','placeholder');
+	placeholder.setAttribute('src','images/placeholder.gif');
+	placeholder.setAttribute('alt','æˆ‘æ˜¯å›¾ç‰‡ç”»å»Š');
+	id('content').appendChild(placeholder);	
+	id('content').appendChild(description);	
+}
+
 addLoadEvent(highlightPage);
+addLoadEvent(tab);
+addLoadEvent(preparePlaceholder);
