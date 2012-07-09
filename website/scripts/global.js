@@ -106,6 +106,40 @@ function preparePlaceholder(){
 	id('content').appendChild(description);	
 }
 
+//传值
+function showPic(whichPic){
+	var source = whichPic.getAttribute('href');   
+    var placeholder = id('placeholder');
+    placeholder.setAttribute('src',source);    
+    if(!id('description')) return false;
+    if(whichPic.getAttribute('title')){
+        var text = whichPic.getAttribute('title');
+    }else{
+        var text = '';
+    }
+    var description = id('description');
+    if(description.firstChild.nodeType == 3){
+        description.firstChild.nodeValue = text;
+    }
+    return false;
+}
+
+//给a 绑定事件
+function prepareGallery(){
+	if(!id('imagegallery')) return false;
+    var gallery = id('imagegallery');
+    var links = gallery.getElementsByTagName('a');    
+    for(var i=0; i<links.length; i++){ 
+        //var whichPic = links[i].getAttribute('href');        
+        links[i].onclick = function(){            
+            return showPic(this);
+        }
+    }
+}
+
+
+
 addLoadEvent(highlightPage);
 addLoadEvent(tab);
 addLoadEvent(preparePlaceholder);
+addLoadEvent(prepareGallery);
