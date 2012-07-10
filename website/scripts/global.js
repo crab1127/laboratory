@@ -137,9 +137,46 @@ function prepareGallery(){
     }
 }
 
+//隔行换色
+function zebra(){
+	var content = id('content');
+	var table = content.getElementsByTagName('table');
+	for(var i=0; i<table.length; i++){
+		var color = true;
+		var row = table[i].getElementsByTagName('tr');
+		for(var a=0; a<row.length; a++){
+			
+			if(color == true){
+				row[a].className = 'odd';
+				color = false;
+			}else{
+				color = true;
+			}			
+				
+		}
+	}
+}
+
+function hove(){	
+	var rows = document.getElementsByTagName('tr');
+	for(var x=0; x<rows.length; x++){
+		rows[x].oldClassName = rows[x].className
+		alert(rows[x].oldClassName)
+		rows[x].onmouseover = function(){
+			addClass(this,'highlight');
+		}
+		rows[x].onmouseout = function(){
+			this.className = this.oldClassName
+		}
+	}
+}
+
+
 
 
 addLoadEvent(highlightPage);
 addLoadEvent(tab);
+addLoadEvent(zebra);
+addLoadEvent(hove);
 addLoadEvent(preparePlaceholder);
 addLoadEvent(prepareGallery);
