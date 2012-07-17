@@ -114,15 +114,10 @@ for(var prop in cat1){alert('cat1['+ prop +']='+cat1[prop]);}
  
 /*
  * 构造函数的继承
- *
- *
- */
- 
-/*
  * 思考：如何让猫 继承 动物呢?
  *
- *
- */
+ */ 
+
 function Animal(){
     this.species = '动物';
 }
@@ -131,3 +126,100 @@ function Cat(name, color){
     this.name = name;
     this.color = color;
 }
+
+/*
+ * 一。构造函数绑定
+ *使用call或apply方法，将父对象的构造绑定在子对象上。
+ */
+ 
+ function Cat(name,color){
+    Animal.apply(this, arguments);
+    this.name = name;
+    this.color =color
+ }
+ 
+ var cat1 = new Cat('大毛','黄色');
+ alert(cat1.species); //动物
+ 
+ 
+/*
+ * 二。prototype模式
+ * 如果"猫"的prototype对象，指向一个Animal的实例，那么所有"猫"的实例，就能继承Animal了
+ *
+ */
+ 
+ Cat.prototype = new Animal(); //将Cat的prototype对象指向一个Animal的实例
+ Cat.Prototype.constructor = Cat; //任何一个prototype对象都有一个constructor属性，指向它的构造函数。
+                                  //如果没有"Cat.prototype = new Animal();"这一行，Cat.prototype.constructor是指向Cat的；加了这一行以后，Cat.prototype.constructor指向Animal。
+ var cat1 = new Cat('大毛','黄色');
+ alert(cat1.species);
+ 
+ 
+/*
+ * 三。直接继承prototype
+ * 此方法是上面的改进，由于Animal对象中，不变的属性都可以直接写入Animal.prototype。
+ * 所以，我们也可以让Cat()跳过 Animal()，直接继承Animal.prototype。
+ * 缺点：Cat.prototype和Animal.prototype现在指向了同一个对象，那么任何对Cat.prototype的修改，都会反映到Animal.prototype。
+ */
+ 
+ function Animal(){}
+ Animal.prototype.species = '动物';
+ Cat.prototype = Animal.prototype;
+ Cat.prototype.constructor = Cat;
+ var cat1 = new Cat('大毛','黄毛');
+ alert(cat1.species); //动物
+ 
+/*
+ * 四。利用空对象作为中介
+ * 修复上面那个缺点
+ * F是空对象，所以几乎不占内存。这时，修改Cat的prototype对象，就不会影响到Animal的prototype对象。
+ * F可以封装成一个extend函数，便于使用。
+ */
+
+ var F = function(){}
+ F.prototype = Animal.prototype;
+ Cat.prototype = new F();
+ Cat.prototype.constructor = Cat;
+ alert(Animal.prototype.constructor); // Animal
+ 
+ function extend(Child,Parent){
+    var F = function(){};
+    F.prototype = Parent.prototype;
+    Child.prototype = new F();
+    Child.prototype.constructor = Child;
+    Child.uber = Parent.prototype; //为子对象设一个uber属性，这个属性直接指向父对象的prototype属性。
+                                   //（uber是一个德语词，意思是"向上"、"上一层"。）这等于在子对象上打开一条通道，
+                                   //可以直接调用父对象的方法。这一行放在这里，只是为了实现继承的完备性，纯属备用性质。
+ }
+ extend(Cat,Animal);
+ var cat1 = new Cat('大毛','黄毛');
+ alert(cat1.species); // 动物
+
+/*
+ * 五。拷贝继承
+ * 拷贝继承：把父对象的所有属性和方法，拷贝进子对象
+ *
+ *
+ */
+ 
+ function Animal(){}
+ Animal.prototype.species = '动物';
+ 
+ function extend2(Child, Parent){ //将父对象的prototype对象中的属性，一一拷贝给Child对象的prototype对象
+    var p = Parent.prototype;
+    var c = Child.prototype;
+    for(var i in p){
+        c[i] = p[i]
+    }
+    c.uber = p;
+ }
+ 
+ extend2(Cat,Animal);
+ var cat1 = new Cat("大毛","黄色");
+ alert(cat1.species); // 动物
+ 
+/*
+ * 
+ *
+ *
+ */
