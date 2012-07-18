@@ -218,8 +218,94 @@ function Cat(name, color){
  var cat1 = new Cat("大毛","黄色");
  alert(cat1.species); // 动物
  
+ 
+ 
+ 
 /*
- * 
- *
+ * 非构造函数的继承
+ * 思考：如何让医生 继承 中国，生成一个叫中国医生的对象
+ * 1。object 方法， 2.拷贝
  *
  */
+ 
+var Chinese = {
+    nation:'中国'
+}
+
+var Doctor = {
+    career:'医生'
+}
+ 
+/*
+ * 1.object 方法
+ *  object函数作用：把子对象的prototype属性，指向父对象，从而使子对象与父对象连在一起
+ *
+ */
+ 
+function object(o){
+    function F(){}
+    F.prototype = o;
+    return new F();
+}
+
+var Doctor = object(Chinese);
+Doctor.career = '医生'; 
+alert(Doctor.nation); //中国
+
+ 
+/*
+ *  浅拷贝
+ *  思路是：把父对象的属性，全部拷贝到子对象
+ *  缺点：如果父对象的属性等于数组或另一个对象，那么实际上，
+ *  子对象获得的只是一个内存地址，而不是真正拷贝，因此存在父对象被篡改的可能。
+ */
+ 
+function extendCopy(p){
+    var c = {};
+    for(var i in p){
+        c[i] = p[i];
+    }
+    c.uber = p;
+    return c;
+}
+
+var Doctor = extendCopy(Chinese);
+Doctor.career = '医生'; 
+alert(Doctor.nation); //中国 
+
+// 现在给Chinese添加一个"出生地"属性，它的值是一个数组
+Chinese.birthPlaces = ['北京','上海','香港'];
+//通过extendCopy()函数，Doctor继承了Chinese。
+var Doctor = extendCopy(Chinese);
+// 为Doctor的出生地添加一个城市
+Doctor.birthPlaces.push('南昌');
+alert(Doctor.birthPlaces); //北京, 上海, 香港, 南昌
+alert(Chinese.birthPlaces); //北京, 上海, 香港, 南昌
+
+
+ 
+/*
+ * 深拷贝：真正意义上的数组和对象的拷贝。
+ * 解决上述那个问题
+ *
+ */
+ 
+ function deepCopy(p,c){
+    var c = c || {};
+    for(var i in p){
+        if(typeof p[i] === 'object'){
+            c[i] = (p[i].constructor === Array) ? [] : {};
+            deepCopy(p[i],c[i]);
+        }
+    }else{
+        c[i] = p[i];
+    }
+    return c;
+ }
+ 
+var Doctor = deepCopy(Chinese);
+Chinese.birthPlaces = ['北京','上海','香港'];
+Doctor.birthPlaces.push('南昌');
+alert(Doctor.birthPlaces); //北京, 上海, 香港, 南昌
+alert(Chinese.birthPlaces); //北京, 上海, 香港
+ 
