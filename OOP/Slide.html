@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+	<title>面向对象无缝滚动</title>
+    <style type="text/css">
+        .clearfix:after{content:'.';display:block;height:0;visibility:hidden;clear:both}
+        .clearfix{*zoom:1}
+        body{background:gray;}
+        #wrap{width:810px;height:160px;border:1px solid black;position:relative;top:50%;left:50%;margin-left:-410px;margin-top:200px;background:#fff;overflow:hidden;}
+        #wrap ul{margin:0;padding:0;position:absolute;top:0px;left:0;}
+        #wrap ul li{list-style:none;float:left;margin:5px 10px;width:282px}
+        #wrap ul li img{border:1px solid black;padding:5px}
+    </style>
+</head>
+<body>
+    <div id="wrap">
+    	<ul>
+    		<li><img src="http://www.baidu.com/img/baidu_sylogo1.gif" alt="" /></li>
+    		<li><img src="http://www.baidu.com/img/baidu_sylogo1.gif" alt="" /></li>
+    		<li><img src="http://www.baidu.com/img/baidu_sylogo1.gif" alt="" /></li>
+    		<li><img src="http://www.baidu.com/img/baidu_sylogo1.gif" alt="" /></li>
+    		<li><img src="http://www.baidu.com/img/baidu_sylogo1.gif" alt="" /></li>
+    		<li><img src="http://www.baidu.com/img/baidu_sylogo1.gif" alt="" /></li>
+    	</ul>
+    </div>
+<script type="text/javascript">
+/*
+ * 滚动的对象
+ * obj           滚动的对象
+ * direction     滚动的方向；
+ * speed         滚动的速度
+ */
+function Slide(obj, direction, speed){
+    this.container = document.getElementById(obj);
+    this.content = this.container.getElementsByTagName('ul')[0];
+    this.rows = this.content.getElementsByTagName('li');
+    this.imgs = this.content.getElementsByTagName('img');
+    this.content.innerHTML += this.content.innerHTMl;
+    this.content.style.width = (this.rows[0].offsetWidth+20)*this.rows.length+'px';
+    var that = this;
+    if(direction == 'left'){
+        this.speed = -speed;
+    }else{
+        this.speed = speed;
+    }
+    this.time = setInterval(function(){
+        this.content.style.left = that.content.offsetLeft + that.speed +'px';
+        if(that.content.offsetLeft <= -that.content.offsetWidth/2){
+            that.content.style.left = '0px';
+        }else if(that.content.offsetLeft >= 0){
+            that.content.style.left = -that.content.offsetWidth/2 + 'px';
+        }
+    },30)
+    for(var i=0; i<this.imgs.length; i++){
+        that.imgs[i].onmouseover = function(){
+            clearInterval(that.time);
+        }
+        that.imgs[i].onmouseout = function(){
+            that.time = setInterval(function(){
+                that.content.style.left = that.content.offsetLeft + that.speed + 'px';
+                if(that.content.offsetLeft <= -that.content.offsetWidth/2){
+                    that.content.style.left = '0px';
+                }else if(that.content.offsetLeft >= 0){
+                    that.content.style.left = -that.content.offsetWidth/2 + 'px';
+                }
+            },30)
+        }
+    }
+}
+window.onload = Slide('wrap', 'left', 1)
+</script>
+</body>
+</html>
