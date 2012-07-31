@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+	<title>面向对象版拖拽，跟限制区域</title>
+    <style>
+    #div1 {width:100px; height:100px; background:#F00; cursor:move; position:absolute; left:10px; top:10px; border-radius:5px;}
+    #div4 {width:100px; height:100px; background:#F00; cursor:move; position:absolute; left:700px; top:100px; border-radius:5px;}
+    #div3 {width:100px; height:100px; background:#F00; cursor:move; position:absolute; left:500px; top:200px; border-radius:5px;}
+    #div2 {width:100px; height:100px; background:#0F3; cursor:move; position:absolute; left:250px; top:350px; border-radius:5px;}
+    #div5 {width:100px; height:100px; background:#0F3; cursor:move; position:absolute; left:30px; top:420px; border-radius:5px;}
+    body{ background-color:#000000;}
+    </style>
+    <script type="text/javascript">
+        function Drag(obj){
+            this.oDiv = document.getElementById(obj);
+            this.mouseStartX = 0;
+            this.mouseStartY = 0;
+            this.divStartX = 0;
+            this.divStattY = 0;
+            var that = this;
+            this.oDiv.onmousedown = function(ev){
+                that.mousedown(ev);
+                return false;
+            }
+        }
+        Drag.prototype.mouseup = function(){
+            document.onmousemove = null;
+            document.onmouseup = null
+        };
+        Drag.prototype.mousemove = function(ev){
+            var oEvent = ev || event;
+            this.oDiv.style.left = oEvent.clientX - this.mouseStartX+this.divStartX + 'px';
+            this.oDiv.style.top = oEvent.clientY - this.mouseStartY+this.divStartY + 'px';
+        };
+        Drag.prototype.mousedown = function(ev){
+            var that = this
+            var oEvent = ev || event;
+            this.mouseStartX = oEvent.clientX;
+            this.mouseStartY = oEvent.clientY;
+            this.divStartX = this.oDiv.offsetLeft;
+            this.divStartY = this.oDiv.offsetTop;
+            document.onmousemove=function(ev){
+                that.mousemove(ev)
+            }
+            document.onmouseup=function(){
+                that.mouseup()
+            }
+        }
+        function Other(obj){
+            Drag.call(this, obj);
+        };
+        for(var i in Drag.prototype){
+            Other.prototype[i]=Drag.prototype[i];
+        }
+        Other.prototype.mousemove=function(ev){
+            var oEvent=ev||event;
+            var l=oEvent.clientX-this.mouseStartX+this.divStartX;
+            var k=oEvent.clientY-this.mouseStartY+this.divStartY;
+            if(l<0){
+                l=0;
+            }else if(l>document.documentElement.clientWidth-this.oDiv.offsetWidth){
+                l=document.documentElement.clientWidth-this.oDiv.offsetWidth;
+            }        
+            if(k<0){
+                k=0;
+            }else if(k>document.documentElement.clientHeight-this.oDiv.offsetHeight){
+                k=document.documentElement.clientHeight-this.oDiv.offsetHeight;
+            }
+            this.oDiv.style.left=l+'px';
+            this.oDiv.style.top=k+'px';
+        };
+    </script>
+</head>
+<body>
+	<div id="div2"></div>
+    <div id="div5"></div>
+    <div id="div1"></div>
+    <div id="div3"></div>
+    <div id="div4"></div>
+    <script type="text/javascript">
+    window.onload=function(){
+        var xiaomomo1=new Drag("div1")
+        var xiaomomos2=new Other("div2")
+        var xiaomomo3=new Other("div3")
+        var xiaomomo4=new Drag("div4")
+        var xiaomomo5=new Other("div5")
+    }
+</script>
+</body>
+</html>
