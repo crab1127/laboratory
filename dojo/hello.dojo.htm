@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+    <title>Hello Dojo!</title> 
+    <script src="http://ajax.googleapis.com/ajax/libs/dojo/1.6/dojo/dojo.xd.js"></script>  
+    <script type="text/javascript">
+        //加载“dojo.fx”模块
+        dojo.require('dojo.fx');
+        //dojo.ready 会等到DOM树和所有依赖都可用时才被调用
+        //dojo.version dojo版本信息        
+        dojo.ready(function(){
+            dojo.byId('greeting').innerHTML += ', from' + dojo.version;
+            dojo.fx.slideTo({
+                top: 100,
+                left: 200,
+                node: dojo.byId('greeting')
+            }).play();
+        })
+        
+    </script>
+</head>  
+<body>  
+    <h1 id="greeting">Hello</h1>  
+</body>  
+</html>
