@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+		<title>dojo.byId</title>
+		<script src="http://ajax.googleapis.com/ajax/libs/dojo/1.6.0/dojo/dojo.xd.js">
+		</script>
+		<script>
+			function setText(node, text){
+				node = dojo.byId(node);
+
+				node.innerHTML = text;
+			}
+
+			dojo.ready(function(){
+				var one = dojo.byId("one");
+
+				setText(one, "1被替换的内容");
+				setText("two", "2被替换的内容");
+			});
+		</script>
+	</head>
+	<body>
+		<h1>dojo.byId</h1>
+
+		<ul id="list">
+			<li id="one">1</li>
+			<li id="two">2</li>
+			<li id="three">3</li>
+			<li id="four">4</li>
+			<li id="five">5</li>
+		</ul>
+	</body>
+</html>

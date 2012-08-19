@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+		<title>dojo.empty and dojo.destroy</title>
+        <script src="http://ajax.googleapis.com/ajax/libs/dojo/1.6.0/dojo/dojo.xd.js">
+		</script>
+
+		<script>
+			function destroyFirst(){
+				var list = dojo.byId("list"),
+					items = list.getElementsByTagName("li");
+
+
+				if(items.length){
+					dojo.destroy(items[0]);
+				}
+			}
+			function destroyAll(){
+				dojo.empty("list");
+			}
+		</script>
+	</head>
+	<body>
+		<h1>dojo.empty and dojo.destroy</h1>
+
+		<button onclick="destroyFirst();">删除一个列表</button>
+		<button onclick="destroyAll();">删除全部列表</button>
+
+		<ul id="list">
+			<li id="one">One</li>
+			<li id="two">Two</li>
+			<li id="three">Three</li>
+			<li id="four">Four</li>
+			<li id="five">Five</li>
+		</ul>
+	</body>
+</html>

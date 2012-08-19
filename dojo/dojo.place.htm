@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+		<title>dojo.place</title>
+		<style>
+			#three {
+				background:#e3e3e3;
+			}
+		</style>
+		<script src="http://ajax.googleapis.com/ajax/libs/dojo/1.6.0/dojo/dojo.xd.js"></script>
+		<script>
+			function moveFirst(){
+				var list = dojo.byId("list"),
+					three = dojo.byId("three");
+
+				dojo.place(three, list, "first");
+			}
+
+			function moveBeforeTwo(){
+				var two = dojo.byId("two"),
+					three = dojo.byId("three");
+
+				dojo.place(three, two, "before");
+			}
+
+			function moveAfterFour(){
+				var four = dojo.byId("four"),
+					three = dojo.byId("three");
+
+				dojo.place(three, four, "after");
+			}
+
+			function moveLast(){
+				var list = dojo.byId("list"),
+					three = dojo.byId("three");
+
+				dojo.place(three, list);
+			}
+		</script>
+	</head>
+	<body>
+		<h1> dojo.place</h1>
+
+		<h4>移动以下位置</h4>
+		<button onclick="moveFirst();">移动到第一个位置</button>
+		<button onclick="moveBeforeTwo();">移动到第2位</button>
+		<button onclick="moveAfterFour();">移动到第4位</button>
+		<button onclick="moveLast();">移动到最后</button>
+
+		<ul id="list">
+			<li id="one">1</li>
+			<li id="two">2</li>
+			<li id="three">3</li>
+			<li id="four">4</li>
+			<li id="five">5</li>
+		</ul>
+	</body>
+</html>
