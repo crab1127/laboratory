@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+	<title>dojo.connect与对象方法</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/dojo/1.6.0/dojo/dojo.xd.js"></script>
+		<script>
+			dojo.ready(function(){
+				var myButtonObject = {
+					onClick: function(evt){
+						alert("我被点击了");
+					}
+				};
+				dojo.connect(dojo.byId("myButton"), "onclick", myButtonObject, "onClick");
+				dojo.connect(myButtonObject, "onClick", function(evt){
+					alert("这个被点击的按钮叫onclick");
+				});
+
+				var myButtonObject2 = {
+					onClickHandler: function(evt){
+						this.onClick(evt, "another argument");
+					},
+					onClick: function(){}
+				};
+				dojo.connect(dojo.byId("myButton2"), "onclick",
+					myButtonObject2, "onClickHandler");
+				dojo.connect(myButtonObject2, "onClick", function(evt, another){
+					alert("点击后得到的参数: " + another);
+				});
+
+				var fadeButton = dojo.byId("fadeButton"),
+					fadeTarget = dojo.byId("fadeTarget");
+
+				dojo.connect(fadeButton, "onclick", function(evt){
+					var anim = dojo.fadeOut({ node: fadeTarget });
+
+					dojo.connect(anim, "onEnd", function(){
+						alert("颜色没有了");
+					});
+
+					anim.play();
+				});
+			});
+		</script>
+</head>
+<body>
+	<h1>dojo.connect与对象方法</h1>
+		<button id="myButton">按钮</button>
+		<button id="myButton2">按钮2</button>
+		<br/><br />
+		<button id="fadeButton">颜色</button>
+
+		<div id="fadeTarget" class="red-block"></div>
+</body>
+</html>
