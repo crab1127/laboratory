@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>打包图的制作</title>
+</head>
+<body>
+  <script type="text/javascript" src="/node_modules/d3/d3.min.js"></script> 
+  <script type="text/javascript">
+    const width = 500
+    const height = 500
+    const svg = d3.select('body')
+                  .append('svg')
+                  .attr('width', width)
+                  .attr('height', height)
+
+    const pack = d3.layout.pack()
+                    .size([width, height])
+                    .radius(20) //设定转换后最小的圆的半径。
+
+    d3.json('./data/city2.json', (err, root) => {
+      const nodes = pack.nodes(root)
+      const links = pack.links(nodes)
+
+      console.log('node', nodes)
+      console.log('link', links)
+
+      svg.selectAll('circle')
+          .data(nodes)
+          .enter()
+          .append('circle')
+          .attr('fill', 'rgb(31, 119, 180)')
+          .attr('fill-opacity', '0.4')
+          .attr('cx', d => d.x)
+          .attr('cy', d => d.y)
+          .attr('r', d => d.r)
+          .on('mouseover', function(d, i){
+            d3.select(this)
+              .transition()
+              .attr('fill', 'yellow')
+          })
+          .on('mouseout', function(d, i){
+            d3.select(this)
+              .transition()
+              .attr('fill', 'rgb(31, 119, 180)')
+          })
+      
+      svg.selectAll('text')
+          .data(nodes)
+          .enter()
+          .append('text')
+          .attr('x', d => d.x)
+          .attr('y', d => d.y)
+          .attr('fill', '#fff')
+          .style('font-size', '10px')
+          .attr('dx', '-12')
+          .attr('dy', '4')
+          .attr('fill-opacity', d => d.children ? '0' : '1')
+          .text(d => d.name)
+
+    })
+  </script>
+</body>
+</html>

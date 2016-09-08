@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+  <title>则线图</title>
+  <div>
+    <button onclick="drawChart()">更新数据</button>
+  </div>
+  <style type="text/css">
+    .axis path,
+    .axis line{
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges;
+    }
+    .inner-line line {
+      z-index: 0
+      fill: none;
+      stroke: #eee;
+      shape-rendering: crispEdges;
+    }
+    text{
+      font-size: 10px
+    }
+  </style>
+</head>
+<body>
+  <script type="text/javascript" src="/node_modules/d3/d3.min.js"></script> 
+  <script>
+    const width = 600
+    const height = 400
+    const padding = 30
+    let dataset = []
+    let xMarks = []
+
+
+    getData()
+    
+    setInterval(drawChart, 10000)
+
+    const svg = d3.select('body').append('svg').attr('width', width).attr('height', height)
+
+    // 比例尺
+    const xScale = d3.scale.linear()
+                      .domain([0, dataset.length - 1])
+                      .range([padding, width - padding])
+
+    const yScale = d3.scale.linear()
+                      .domain([0, d3.max(dataset)])
+                      .range([height-padding, padding])
+
+    // 轴 布局
+    const xAxis = d3.svg.axis()
+                    .scale(xScale)
+                    .orient('bottom')
+                    .ticks(dataset.length)
+
+    const yAxis = d3.svg.axis()
+                    .scale(yScale)
+                    .orient('left')
+
+
+    //绘制网格
+    const xInner = d3.svg.axis()
+                    .scale(xScale)
+                    .tickSize(-(height - padding - padding), 0, 0)
+                    .orient('bottom')
+                    .ticks(dataset.length)
+    svg.append('g')
+        .attr('class', 'inner-line')
+        .attr('transform', `translate(0, ${height - padding})`)
+        .call(xInner)
+        .selectAll('text')
+        .text('')
+
+    const yInner = d3.svg.axis()
+                      .scale(yScale)
+                      .tickSize(-(width -padding - padding), 0, 0)
+                      .tickFormat('')
+                      .orient('left')
+                      .ticks(10)
+    svg.append('g')
+        .attr('class', 'inner-line')
+        .attr('transform', `translate(${padding}, 0)`)
+        .call(yInner)
+        .selectAll('text')
+        .text('')
+
+
+
+    // 绘制轴
+    const xBar = svg.append('g')
+        .attr('class', 'axis')
+        .attr('transform', `translate(0, ${height - padding})`)
+        .call(xAxis)
+        .selectAll('text')
+        .text(i => xMarks[i])
+
+    const yBar = svg.append('g')
+        .attr('class', 'axis')
+        .attr('transform', `translate(${padding}, 0)`)
+        .call(yAxis)
+
+
+    // 绘制线
+    const line = d3.svg.line()
+                    .interpolate('linear')
+                    .x((d,i) => xScale(i))
+                    .y(d => yScale(d))
+
+    const path = svg.append('path')
+        .attr('d', line(dataset))
+        .attr('fill', 'none')
+        .attr('stroke', '#333')
+        .attr('stroke-width', 2)
+
+    const circle = svg.selectAll('circle')
+        .data(dataset).enter().append('circle')
+        .attr('r', 5)
+        .attr('fill', '#fff')
+        .attr('stroke', 'red')
+        .attr('stroke-width', 1.5)
+        .attr('cx', (d, i) => xScale(i) )
+        .attr('cy', d => yScale(d))
+
+
+
+    function drawChart() {
+      getData()
+
+      // 重会路径
+      path.transition() 
+          .duration(1000)
+          .attr('d', line(dataset))
+
+      // 重会点
+      circle.data(dataset)
+            .transition()
+            .duration(1000)
+            .attr('cx', (d, i) => xScale(i))
+            .attr('cy', d => yScale(d))
+    }
+
+    //产生随机数据
+    function getData() {   
+      let dataNum = 15;
+      dataset = [];
+      xMarks = [];
+      for(i = 1; i < dataNum; i++) {
+        dataset.push(Math.round(Math.random() * height));
+        xMarks.push("标签"+i);
+      }   
+    } 
+  </script>
+</body>
+</html>

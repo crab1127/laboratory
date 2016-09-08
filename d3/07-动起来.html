@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>动起来</title>
+</head>
+<body>
+  <script type="text/javascript" src="/node_modules/d3/d3.min.js"></script>
+  <script>
+    let svg = d3.select('body').append('svg')
+                .attr('width', 500)
+                .attr('height', 500)
+
+    let createCircle = (svg, y = 100) => {
+      return svg.append('circle')
+          .attr('cx', 100)
+          .attr('cy', y)
+          .attr('r', 45)
+          .style('fill', 'green')
+    }
+
+    let circle1 = createCircle(svg)
+    let circle2 = createCircle(svg, 200)
+    let circle3 = createCircle(svg, 300)
+
+    circle1.transition()
+            .duration(1000)
+            .attr('cx', 300)
+
+    circle2.transition()
+            .delay(300)
+            .duration(1000)
+            .attr('cx', 300)
+            .style('fill', 'red')
+
+
+    circle3.transition()
+            .duration(2000)
+            .ease('bounce')
+            .attr('cx', 300)
+            .style('fill', 'red')
+            .attr('r', 25)
+  </script>
+</body>
+</html>

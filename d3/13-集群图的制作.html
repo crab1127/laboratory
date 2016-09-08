@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>集群图的制作</title>
+  <style>
+    .link {
+      fill: none;
+      stroke: #999;
+      stroke-width: 1px;
+    }
+    .node text{
+      font-size: 12px;
+    }
+    .node circle {
+      fill:#fff;
+      stroke: #06c;
+      stroke-width: 1.5px;
+    }
+  </style>
+</head>
+<body>
+  <script type="text/javascript" src="/node_modules/d3/d3.min.js"></script> 
+  <script type="text/javascript">
+    const width = 500
+    const height = 500
+    const svg = d3.select('body')
+                  .append('svg')
+                  .attr('width', width)
+                  .attr('height', height)
+                  .append('g')
+                  .attr('transform', 'translate(30, 0)')
+
+    // 数据
+    // const cityData = {
+    //   "name":"中国",
+    //   "children":
+    //   [
+    //       { 
+    //         "name":"浙江" , 
+    //         "children":
+    //         [
+    //               {"name":"杭州" },
+    //               {"name":"宁波" },
+    //               {"name":"温州" },
+    //               {"name":"绍兴" }
+    //         ] 
+    //       },
+          
+    //       { 
+    //           "name":"广西" , 
+    //           "children":
+    //           [
+    //               {"name":"桂林"},
+    //               {"name":"南宁"},
+    //               {"name":"柳州"},
+    //               {"name":"防城港"}
+    //           ] 
+    //       },
+          
+    //       { 
+    //           "name":"黑龙江",
+    //           "children":
+    //           [
+    //               {"name":"哈尔滨"},
+    //               {"name":"齐齐哈尔"},
+    //               {"name":"牡丹江"},
+    //               {"name":"大庆"}
+    //           ] 
+    //       },
+          
+    //       { 
+    //           "name":"新疆" , 
+    //           "children":
+    //           [
+    //               {"name":"乌鲁木齐"},
+    //               {"name":"克拉玛依"},
+    //               {"name":"吐鲁番"},
+    //               {"name":"哈密"}
+    //           ]
+    //       }
+    //   ]
+    // }
+
+    // 布局
+    const cluster = d3.layout.cluster()
+                      .size([width, height - 200])
+
+
+    d3.json('./data/city.json', (error, root) => {
+      const nodes = cluster.nodes(root)
+      const links = cluster.links(nodes)
+
+      console.log('nodes', nodes)
+      console.log('links', links)
+
+      // 绘制
+      // 对角线
+      const diagonal = d3.svg.diagonal()
+                          .projection(d => [d.y, d.x])
+
+      const link = svg.selectAll('.link') 
+                      .data(links)
+                      .enter()
+                      .append('path')
+                      .attr('class', 'link')
+                      .attr('d', diagonal)
+
+      const node = svg.selectAll('.node')
+                      .data(nodes)
+                      .enter()
+                      .append('g')
+                      .attr('class', 'node')
+                      .attr('transform', d => `translate(${d.y}, ${d.x})`)
+
+      node.append('circle').attr('r', 5)
+      node.append('text')
+          .attr('dx', d => d.children ? -8 : 8)
+          .attr('dy', 3)
+          .style('text-anchor', d => d.children ? 'end' : 'start')
+          .text(d => d.name)
+
+      // // 文本
+      // const text = svg.append('g')
+      //                 .selectAll('text')
+      //                 .data(nodes)
+      //                 .enter()
+      //                 .append('text')
+      //                 .attr('x', d => d.y)
+      //                 .attr('y', d => d.x)
+      //                 .text(d => d.name)
+      // // 圈圈
+      // const circle = svg.append('g')
+      //                   .attr('class', 'cir')
+      //                   .selectAll('circle')
+      //                   .data(nodes)
+      //                   .enter()
+      //                   .append('circle')
+      //                   .attr('r', 5)
+      //                   .attr('cx', d => d.y)
+      //                   .attr('cy', d => d.x)
+    })            
+  </script>
+</body>
+</html>

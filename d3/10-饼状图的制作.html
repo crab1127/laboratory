@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>饼状图的制作</title>
+</head>
+<body>
+  <script type="text/javascript" src="/node_modules/d3/d3.min.js"></script>  
+  <script>
+    let dataset = [30, 10, 43, 55, 14, 23, 43]
+
+    let pie = d3.layout.pie()
+    var pieData = pie(dataset)
+
+    console.log(pieData)
+
+    let outerRadius = 150 // 外半径
+    let innerRadius = 0   // 内半径，为0 则表示中间没有空白
+
+    let arc = d3.svg.arc()  // 弧生成器
+                .innerRadius(innerRadius) // 设置半径
+                .outerRadius(outerRadius)
+
+    let svg = d3.select('body')
+                .append('svg')
+                .attr('width', 400)
+                .attr('height', 400)
+
+    let arcs = svg.selectAll('g')
+                  .data(pieData)
+                  .enter()
+                  .append('g')
+                  .attr('transform', 'translate(200, 200)')
+
+    let color = d3.scale.category10();
+    // 给每个g添加 path
+    arcs.append('path')
+        .attr('fill', (d, i) => color(i))
+        .attr('d', (d) => arc(d))
+        .attr('transform', 'translate(0, 0)')
+        .on('mouseover', function(d, i) {
+
+          d3.select(this)
+            .transition()
+            .attr('transform', (d) => {
+              console.log(arc.centroid(d))
+              let x = arc.centroid(d)[0] / 10
+              let y = arc.centroid(d)[1] / 10
+              return "translate(" + x +','+ y + ")";
+            })
+          // let text = d3.selectAll('text')[0][i]
+          //   text.style('color', '#fff')
+        })
+        .on('mouseout', function (d, i) {
+          d3.select(this)
+            .transition()
+            .attr('transform', (d) => `translate(0, 0)`)
+        })
+        .transition()
+        .duration(1000)
+        .ease("linear")
+        .attr("fill",function(d,i){
+            return color(i+1);
+        });
+
+    // 绘制文本
+    arcs.append('text')
+        .attr('transform', d => `translate(${arc.centroid(d)})`)
+        .attr('text-anchor', 'middle')
+        .text(d => d.data)
+  </script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>力导向图的制作</title>
+</head>
+<body>
+  <script type="text/javascript" src="/node_modules/d3/d3.min.js"></script>  
+  <script>
+    let width = 400 
+    let height = 400
+
+
+    const nodes = [ { name: "桂林" }, { name: "广州" },
+                    { name: "厦门" }, { name: "杭州" },
+                    { name: "上海" }, { name: "青岛" },
+                    { name: "天津" } ];
+ 
+    const edges = [ { source : 0 , target: 1 } , { source : 0 , target: 2 } ,
+                    { source : 0 , target: 3 } , { source : 1 , target: 4 } ,
+                    { source : 1 , target: 5 } , { source : 1 , target: 6 } ];
+
+
+    // 布局 数据转换
+    let force = d3.layout.force()
+                  .nodes(nodes)             // 指定节点数组
+                  .links(edges)             // 指定连接线数组
+                  .size([width, height])    // 指定作用域俄范围
+                  .linkDistance(150)        // 指定连接线长度
+                  .charge([-400])           // 相互之间的作用力
+
+    force.start()  // 开始
+
+    console.log('nodes', nodes)
+    console.log('edges', edges)
+
+    // 绘制
+    const color = d3.scale.category20()
+
+    const svg = d3.select('body')
+                  .append('svg')
+                  .attr('width', width)
+                  .attr('height', height)
+
+    // 添加连线
+    const svg_edges = svg.selectAll('line')
+                          .data(edges)
+                          .enter()
+                          .append('line')
+                          .style('stroke', '#ccc')
+                          .style('stroke-width', 1)
+
+    // 添加节点
+    const svg_nodes = svg.selectAll('circle')
+                          .data(nodes)
+                          .enter()
+                          .append('circle')
+                          .attr('r', 20)
+                          .attr('fill', (d, i) => color(i))
+                          .call(force.drag)  //使的节点能够拖动
+    // 添加可描述节点的文字
+    const svg_texts = svg.selectAll('text')
+                          .data(nodes)
+                          .enter()
+                          .append('text')
+                          .attr('fill', 'black')
+                          .attr('dx', 20)
+                          .attr('dy', 8)
+                          .text(d => d.name)
+
+    // 每进行到一个时刻，都要调用它，更新的内容就写在它的监听器里就好。
+    force.on('tick', function () {
+      // 更新链接线坐标
+      svg_edges.attr('x1', d => d.source.x)
+                .attr('y1', d => d.source.y)
+                .attr('x2', d => d.target.x)
+                .attr('y2', d => d.target.y)
+
+      // 更新节点坐标
+      svg_nodes.attr('cx', d => d.x)
+                .attr('cy', d => d.y)
+
+      svg_texts.attr('x', d => d.x)
+                .attr('y', d => d.y)
+    })
+  </script>
+</body>
+</html>

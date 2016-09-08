@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>完整的柱形图</title>
+  <style type="text/css">
+    .axis path,
+    .axis line{
+      fill: none;
+      stroke: black;
+      shape-rendering: crispEdges;
+    }
+
+    .axis text {
+      font-family: sans-serif;
+      font-size: 11px;
+    }
+
+    .MyRect {
+      fill: steelblue;
+    }
+
+    .MyText {
+      fill: white;
+      text-anchor: middle;
+    }
+
+  </style>
+</head>
+<body>
+  <script type="text/javascript" src="/node_modules/d3/d3.min.js"></script>
+  <script>
+    let width = 400
+    let height = 400
+    let svg = d3.select('body')
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height)
+    let padding = {left: 30, right: 30, top: 30, bottom: 30}
+
+    let dataset = [10, 20, 30, 40, 33, 24, 12, 5]
+
+    // X轴的比例尺
+    let xScale = d3.scale.ordinal()
+                    .domain(d3.range(dataset.length))
+                    .rangeRoundBands([0, width - padding.left - padding.right])
+
+    // y轴的比例尺
+    let yScale = d3.scale.linear() 
+                    .domain([0, d3.max(dataset)])
+                    .range([height - padding.top - padding.bottom, 0])
+
+    // 定义X轴
+    let xAxis = d3.svg.axis()
+                  .scale(xScale)
+                  .orient('bottom')
+
+    // 定义y轴
+    let yAxis = d3.svg.axis()
+                  .scale(yScale)
+                  .orient('left')
+    
+    console.log(1, xScale)
+    console.log(2, yScale)
+    console.log(3, xAxis)
+    console.log(4, yAxis)
+
+
+    // 绘制矩形
+    // 矩形空白
+    let rectPadding = 4
+    let rects = svg.selectAll('.MyRect')
+                    .data(dataset)
+                    .enter()
+                    .append('rect')
+                    .attr('class', 'MyRect')
+                    .attr('transform', `translate(${padding.left},${padding.top})`)
+                    .attr('x', (d, i) => xScale(i) + rectPadding / 2)
+                    .attr('y', (d) => {
+                      let min = yScale.domain()[0]
+                      return yScale(min)
+                    })
+                    .attr('width', xScale.rangeBand() - rectPadding)
+                    .attr('height', () => 0)
+                    .transition()
+                    .delay((d, i) => i * 200)
+                    .duration(1000)
+                    .ease('bounce')
+                    .attr('y', d => yScale(d))
+                    .attr('height', d => height - padding.top - padding.bottom - yScale(d))
+
+    // 添加文字元素
+    let texts = svg.selectAll('.MyText')
+                    .data(dataset)
+                    .enter()
+                    .append('text')
+                    .attr('class', 'MyText')
+                    .attr('transform', `translate(${padding.left}, ${padding.top})`)
+                    .attr('x', (d, i) =>  xScale(i) + rectPadding / 2)
+                    .attr('dx', () => (xScale.rangeBand() - rectPadding) / 2)
+                    .attr('dy', _ => 20 )
+                    .text(d => d)
+                    .attr('y', d => {
+                      let min = yScale.domain()[0]
+                      return yScale(min)
+                    })
+                    .transition()
+                    .delay((d, i) => i * 200)
+                    .duration(1000)
+                    .ease('bounce')
+                    .attr('y', d => yScale(d))
+    // 添加坐标轴
+    svg.append('g')
+        .attr('class', 'axis')
+        .attr('transform', `translate(${padding.left}, ${height - padding.bottom})`)
+        .call(xAxis)
+
+    svg.append('g')
+        .attr('class', 'axis')
+        .attr('transform', `translate(${padding.left}, ${padding.top})`)
+        .call(yAxis)
+
+    // rects.transition()
+    //       .tran
+
+  </script>
+</body>
+</html>

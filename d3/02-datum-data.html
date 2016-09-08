@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>datum-data</title>
+</head>
+<body>
+  <div class="datum">
+    <p>Apple</p>
+    <p>Pear</p>
+    <p>Banana</p>
+  </div>
+  <div class="data">
+    <p>Apple</p>
+    <p>Pear</p>
+    <p>Banana</p>
+  </div>
+  <script type="text/javascript" src="/node_modules/d3/d3.min.js"></script>
+  <script type="text/javascript">
+    let datum = d3.select('.datum').selectAll('p')
+    let str = 'china'
+    datum.datum(str)
+    datum.text(function(d, i) {
+      return '第' + i + '个元素绑定' + d
+    })
+
+
+    let data = d3.select('.data').selectAll('p')
+    let dataset = ["I like dogs","I like cats","I like snakes"];
+    data.data(dataset)
+    data.text(function(d) {
+      return d
+    }) 
+  </script>
+</body>
+</html>

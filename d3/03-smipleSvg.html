@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>bar</title>
+</head>
+<body>
+  <script type="text/javascript" src="/node_modules/d3/d3.min.js"></script>
+  <script>
+    let width = 300
+    let height = 300
+    let dataset = [ 250, 210, 170, 130, 89 ]
+    
+
+    {
+      let rectHeight = 25
+      let svg = d3.select('body')
+                  .append('svg')
+                  .attr('width', width)
+                  .attr('height', height)
+      svg.selectAll('rect')
+          .data(dataset)
+          .enter()
+          .append('rect')
+          .attr('x', 20)
+          .attr('y', function (d, i) {
+            return i * rectHeight  
+          })
+          .attr('width', function (d) {
+            return d
+          })
+          .attr('height', rectHeight - 2)
+          .attr('fill', 'steelblue')
+    }
+
+    {
+      let rectWidth = 25
+      let svg = d3.select('body')
+                  .append('svg')
+                  .attr('width', width)
+                  .attr('height', height)
+                  .style('background', '#f4f4f4')
+      svg.selectAll('rect')
+          .data(dataset)
+          .enter()
+          .append('rect')
+          .attr('x', function (d, i) {
+            return i * rectWidth + 20
+          })
+          .attr('y', function (d, i) {
+            return height - d
+          })
+          .attr('width', rectWidth - 2)
+          .attr('height', function (d) {
+            return d
+          })
+          .attr('fill', 'red')
+    }
+  </script>
+</body>
+</html>
