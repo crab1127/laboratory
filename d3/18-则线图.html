@@ -22,6 +22,16 @@
     text{
       font-size: 10px
     }
+    .tiptools
+    {
+      display:block;
+      background-color:#FFF;
+      border:1px solid #E7E7E7;
+      padding:10px;
+      font-size:12px;
+      font-family:Arial, Helvetica, sans-serif;
+      cursor:pointer;
+    }
   </style>
 </head>
 <body>
@@ -29,25 +39,28 @@
   <script>
     const width = 600
     const height = 400
-    const padding = 30
+    const padding = {top: 50, right:30, bottom: 30, left: 50}
+    const title = '保养费用图'
     let dataset = []
+    let oldData = []
     let xMarks = []
 
 
     getData()
     
-    setInterval(drawChart, 10000)
+    // setInterval(drawChart, 10000)
 
-    const svg = d3.select('body').append('svg').attr('width', width).attr('height', height)
+    const svg = d3.select('body').append('svg').attr('width', width).attr('height', height).style('border', '1px solid #ddd')
 
     // 比例尺
     const xScale = d3.scale.linear()
                       .domain([0, dataset.length - 1])
-                      .range([padding, width - padding])
+                      .range([padding.left, width - padding.right])
+
 
     const yScale = d3.scale.linear()
                       .domain([0, d3.max(dataset)])
-                      .range([height-padding, padding])
+                      .range([height - padding.bottom, padding.top])
 
     // 轴 布局
     const xAxis = d3.svg.axis()
@@ -59,46 +72,48 @@
                     .scale(yScale)
                     .orient('left')
 
+    // 绘制标题
+    const vTitle = svg.append('text')
+                      .text(title)
+                      .attr('x', width/2)
+                      .attr('y', padding.top/2)
+                      .attr('text-anchor', 'middle')
+                      .style('font-size', '18px')
 
     //绘制网格
-    const xInner = d3.svg.axis()
-                    .scale(xScale)
-                    .tickSize(-(height - padding - padding), 0, 0)
-                    .orient('bottom')
-                    .ticks(dataset.length)
-    svg.append('g')
-        .attr('class', 'inner-line')
-        .attr('transform', `translate(0, ${height - padding})`)
-        .call(xInner)
-        .selectAll('text')
-        .text('')
-
-    const yInner = d3.svg.axis()
-                      .scale(yScale)
-                      .tickSize(-(width -padding - padding), 0, 0)
-                      .tickFormat('')
-                      .orient('left')
-                      .ticks(10)
-    svg.append('g')
-        .attr('class', 'inner-line')
-        .attr('transform', `translate(${padding}, 0)`)
-        .call(yInner)
-        .selectAll('text')
-        .text('')
-
+    const grid = svg.append('g')
+                    .attr('class', 'inner-line')
+    // 竖线
+    const yGrid = grid.selectAll('.vt-line')
+                      .data(dataset).enter().append('line')
+                      .attr('class', 'vt-line')
+                      .attr('x1', (d, i) => xScale(i))
+                      .attr('y1', padding.top)
+                      .attr('x2', (d, i) => xScale(i))
+                      .attr('y2', height - padding.bottom)
+    // 横线
+    // console.log(yScale.ticks(10))
+    const xGrid = grid.selectAll('.hr-line')
+                      .data(yScale.ticks(10)).enter().append('line')
+                      .attr('class', 'hr-line')
+                      .attr('y1', d => yScale(d))
+                      .attr('x1', padding.left)
+                      .attr('y2', d => yScale(d))
+                      .attr('x2', width - padding.right)
 
 
     // 绘制轴
     const xBar = svg.append('g')
         .attr('class', 'axis')
-        .attr('transform', `translate(0, ${height - padding})`)
+        .attr('transform', `translate(0, ${height - padding.bottom})`)
         .call(xAxis)
-        .selectAll('text')
+
+    xBar.selectAll('text')
         .text(i => xMarks[i])
 
     const yBar = svg.append('g')
         .attr('class', 'axis')
-        .attr('transform', `translate(${padding}, 0)`)
+        .attr('transform', `translate(${padding.top}, 0)`)
         .call(yAxis)
 
 
@@ -111,30 +126,146 @@
     const path = svg.append('path')
         .attr('d', line(dataset))
         .attr('fill', 'none')
-        .attr('stroke', '#333')
-        .attr('stroke-width', 2)
+        .attr('stroke', '#000')
+        .attr('stroke-width', 1)
 
-    const circle = svg.selectAll('circle')
-        .data(dataset).enter().append('circle')
-        .attr('r', 5)
-        .attr('fill', '#fff')
-        .attr('stroke', 'red')
-        .attr('stroke-width', 1.5)
-        .attr('cx', (d, i) => xScale(i) )
-        .attr('cy', d => yScale(d))
+    // 绘制点 
+    const sgCircle = svg.append('g').attr('class', 'g-cir');
+
+    sgCircle.selectAll('circle')
+            .data(dataset).enter().append('circle')
+            .attr('r', 5)
+            .attr('fill', 'red')
+            .attr('cx', (d, i) => xScale(i) )
+            .attr('cy', d => yScale(d))
+            .on('mouseover', function(d, i) {
+              var tx=parseFloat(d3.select(this).attr("cx"));
+              var ty=parseFloat(d3.select(this).attr("cy"));
+              
+              var tips=svg.append("g")
+              .attr("id","tips");         
+              
+              var tipRect=tips.append("rect")
+                .attr("x",tx+10)
+                .attr("y",ty+10)
+                .attr("width",120)
+                .attr("height",30)
+                .attr("fill","#FFF")
+                .attr("stroke-width",1)
+                .attr("stroke","#CCC");
+              
+              var tipText=tips.append("text")         
+              .attr("class","tiptools")
+              .text(xMarks[i]+"\r\n费用"+ d)
+              .attr("x",tx+20)
+              .attr("y",ty+30);
+            })
+            .on("mouseout",function(d,i){
+                d3.select("#tips").remove();
+            })
 
 
 
     function drawChart() {
       getData()
+      let newLength = dataset.length
+      let _duration = 1000
 
-      // 重会路径
+      //添加／删除路径
+      let lineZero = d3.svg.line()
+                        .x((d, i) => i >= oldData.length ? width - padding.left : xScale(i))
+                        .y((d, i) => i >= oldData.length ? height - padding.bottom : yScale(oldData[i]))
+      // 路径初始化
+      path.attr("d",lineZero(dataset));                   
+
+      // 截取旧书籍
+      oldData = oldData.slice(0, dataset.length)
+      // 删除多余点
+      sgCircle.selectAll('circle')
+              .data(oldData)
+              .exit()
+              .remove()
+
+      // 圆点初始化
+      sgCircle.selectAll('circle')
+              .data(dataset)
+              .enter().append('circle')
+              .attr('cx', (d, i) => i >= oldData.length ? width - padding.left : xScale(i))
+              .attr('cy', (d, i) => i >= oldData.length ? height - padding.bottom : yScale(d))
+              .attr('r', 5)
+              .attr('fill', 'red')
+              .on('mouseover', function(d, i) {
+                var tx=parseFloat(d3.select(this).attr("cx"));
+                var ty=parseFloat(d3.select(this).attr("cy"));
+                
+                var tips=svg.append("g")
+                .attr("id","tips");         
+                
+                var tipRect=tips.append("rect")
+                  .attr("x",tx+10)
+                  .attr("y",ty+10)
+                  .attr("width",120)
+                  .attr("height",30)
+                  .attr("fill","#FFF")
+                  .attr("stroke-width",1)
+                  .attr("stroke","#CCC");
+                
+                var tipText=tips.append("text")         
+                .attr("class","tiptools")
+                .text(xMarks[i]+"\r\n费用"+ d)
+                .attr("x",tx+20)
+                .attr("y",ty+30);
+              })
+              .on("mouseout",function(d,i){
+                  d3.select("#tips").remove();
+              })
+
+      // 轴 更新
+      xScale.domain([0,newLength-1]);   
+      xAxis.scale(xScale).ticks(newLength);
+      xBar.transition().duration(_duration).call(xAxis);
+      xBar.selectAll("text").text(d => xMarks[d]);
+
+      yScale.domain([0, d3.max(dataset)])
+      yAxis.scale(yScale)
+      yBar.transition().duration(1000).call(yAxis)
+
+      // 坐标更新
+      // 删除多余的
+      grid.selectAll('.vt-line').data(oldData).exit().remove()
+      grid.selectAll('.vt-line')
+            .data(dataset)
+            .enter().append('line')
+            .attr('class', 'vt-line')
+            // .attr('x1', (d, i) => xScale(i))
+            // .attr('x2', (d, i) => xScale(i))
+      grid.selectAll('.vt-line')
+            .data(dataset)
+            .transition()
+            .duration(1000)
+            .attr('x1', (d, i) => xScale(i))
+            .attr('y1', padding.top)
+            .attr('x2', (d, i) => xScale(i))
+            .attr('y2', height - padding.bottom)
+
+      console.log('ticks', yScale.ticks().length)
+      grid.selectAll('.hr-line').remove()   
+      grid.selectAll('.hr-line')
+          .data(yScale.ticks(10)).enter().append('line')
+          .attr('class', 'hr-line')
+          .attr('y1', d => yScale(d))
+          .attr('x1', padding.left)
+          .attr('y2', d => yScale(d))
+          .attr('x2', width - padding.right)
+
+
+      // 动画
       path.transition() 
           .duration(1000)
           .attr('d', line(dataset))
 
-      // 重会点
-      circle.data(dataset)
+      // 动画
+      sgCircle.selectAll('circle').data(dataset)
             .transition()
             .duration(1000)
             .attr('cx', (d, i) => xScale(i))
@@ -143,11 +274,12 @@
 
     //产生随机数据
     function getData() {   
-      let dataNum = 15;
+      let dataNum = Math.round(Math.round(Math.random()*10))+5;
+      oldData=dataset;
       dataset = [];
       xMarks = [];
       for(i = 1; i < dataNum; i++) {
-        dataset.push(Math.round(Math.random() * height));
+        dataset.push(Math.round(Math.random() * height * 7));
         xMarks.push("标签"+i);
       }   
     } 
