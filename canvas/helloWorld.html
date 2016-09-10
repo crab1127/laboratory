@@ -4,6 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
   <title>hello world</title>
+  <style type="text/css">
+    * {
+      margin: 0;
+      padding: 0;
+    }
+  </style>
 </head>
 <body>
   <canvas id="canvas" height="400" width="400">
@@ -22,9 +28,40 @@
     ctx.strokeStyle = '#c00'
     ctx.stroke()
 
-
+    // 生成实体矩形
     ctx.fillStyle = 'yellow'
-    ctx.fillRect(50, 50, 150, 150);
+    ctx.fillRect(5, 5, 150, 150);
+
+    // 边框矩形
+    ctx.strokeStyle = 'green'
+    ctx.lineWidth = 5
+    ctx.strokeRect(0, 0, 160, 160)
+
+    // ctx.fillRect(25,25,100,100);
+    // ctx.clearRect(45,45,60,60);
+    // ctx.strokeRect(50,50,50,50);
+
+    ctx.beginPath()
+    ctx.moveTo(360, 160)
+    ctx.lineTo(330, 130)
+    ctx.lineTo(300, 160)
+    ctx.fillStyle = '#000'
+    ctx.fill()
+    ctx.strokeStyle = '#c00'
+    ctx.lineWidth = 3
+    ctx.stroke()
+
+    //
+    ctx.beginPath()
+    ctx.arc(75,75,50,0,Math.PI*2,true); // 绘制
+    ctx.moveTo(110,75);
+    ctx.arc(75,75,35,0, Math.PI,false);   // 口(顺时针)
+    ctx.moveTo(65,65);
+    ctx.arc(60,65,5,0,Math.PI*2,true);  // 左眼
+    ctx.moveTo(95,65);
+    ctx.arc(90,65,5,0,Math.PI*2,true);  // 右眼
+    ctx.stroke()
   </script>
+
 </body>
 </html>
