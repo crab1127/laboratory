@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+  <title>hello world</title>
+</head>
+<body>
+  <canvas id="canvas" height="400" width="400">
+    你的浏览器不支持canvas
+  </canvas>
+  <script type="text/javascript">
+    let canvas = document.getElementById('canvas')
+    // if (!canvas.getContext) return;
+
+    const ctx = canvas.getContext('2d')
+
+    ctx.beginPath()
+    ctx.moveTo(20, 20)
+    ctx.lineTo(200, 20)
+    ctx.lineWidth = 1
+    ctx.strokeStyle = '#c00'
+    ctx.stroke()
+
+
+    ctx.fillStyle = 'yellow'
+    ctx.fillRect(50, 50, 150, 150);
+  </script>
+</body>
+</html>

@@ -1,0 +1,431 @@
+
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>flexbox全兼容模板</title>
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale = 1.0,shrink-to-fit=no,minimal-ui," />
+        <style type="text/css">
+            * {
+                margin: 0;
+                padding: 0;
+            }
+
+/*global*/
+h3{
+    line-height: 36px;
+    height: 36px;
+    padding-left: 20px;
+    background: #f2f2f2;
+    margin:20px 0;
+}
+.f-icon {
+    display: block;
+    width: 20px;
+    height: 20px;
+    background: #31BBEE;flex:none;
+}
+.f-btn{
+    
+    width: 50px;
+    height:25px;
+    text-align: center;
+    background: #31BBEE;
+    margin: 10px;
+    line-height: 25px;
+    color: #fff;
+    /*子元素默认是可以伸缩的，需要写flex:none来禁止伸缩;
+    */flex:none;
+}
+h2{
+    font-weight: bold;
+    font-size: 16px;
+}
+.flex-cont{
+    /*定义为flexbox*/display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+}
+.flex-item{
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+    width: 0%;
+}
+
+/*消息提示*/
+.flex-info{
+    -webkit-box-align: start;
+    -webkit-align-items: flex-start;
+    align-items: flex-start;
+    margin: 20px 0;
+    border-bottom: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+    padding:10px;
+}
+.flex-info .f-icon{
+    margin:0 10px 0 20px;
+}
+.flex-info-center{
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+
+/*列表*/
+.flex-simple {
+    /*定义子元素垂直居中*/
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    padding: 10px 15px;
+}
+.s-img {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+    background: #31BBEE;
+}
+.s-tit{
+    font-size: 20px;
+    font-weight: bold;
+}
+.s-tit,.s-desc {
+    line-height: 1.2;
+}
+
+
+    
+
+/*tab*/
+
+    .flex-tab {
+    margin:10px 0;
+    width: 100%;
+    height: 44px;
+    line-height: 44px;
+    background-color: #FFF;
+    /*子元素沿主轴对齐方式均分*/
+        -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    /*子元素沿侧轴对齐方式垂直居中*/
+        -webkit-box-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+    .flex-tab li{
+    width:0%;
+    /*旧版的使用比例伸缩布局时会导致盒子内容大小不等会导致无法‘等分’等布局。这个时候需要设置width:0%;
+    等把原始大小设置成0*/
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    color: #777;
+    font-size: 16px;
+    border:1px solid #ddd;
+    border-left: none;
+    /*定义flexbox子元素的伸缩度*/
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+}
+    .flex-tab li:last-child{
+    border-right: none;
+}
+    .flex-tab li a{
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+}
+    .flex-tab li .tab-title{
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-size: 16px;
+    color: #777;
+}
+    .flex-tab li.current .tab-title{
+    color: #259ade;
+}
+
+    /*导航*/
+    .flex-nav{
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    height: 44px;
+    line-height: 44px;
+    /*定义子元素垂直居中*/
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    /*子元素沿主轴对齐方式均分*/
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+}
+    .flex-nav .nav-title {
+    text-align: center;
+    line-height: 1.2;
+    width: 0%;
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+}
+    
+    .flex-nav .nav-title p{
+    color:#aaa;
+    font-size: 12px;
+}
+/*搜索*/
+.flex-search{
+    /*定义子元素垂直居中*/
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    /*子元素沿主轴对齐方式均分*/
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+}
+.flex-search .input{
+    width: 0%;
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+    margin-left:10px;
+    height: 25px;
+    line-height: 25px;
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+}
+.flex-search .input input{border: none;width: 100%}
+.flex-search span{
+    padding: 10px;
+    padding-right: 0;
+    width: 50px;
+    display: block;
+    flex:none;
+}
+.flex-search .f-icon{
+    margin-left: 10px;
+}
+
+/*垂直居中*/
+.flex-centerbox{
+    width: 100%;
+    height: 200px;
+    background: #fafafa;
+    /*子元素沿主轴对齐方式居中*/
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    /*子元素沿侧轴对齐方式垂直居中*/
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    border-top:1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    padding:10px 0;
+    margin:10px 0;
+}
+.center-cont{
+    display: block;
+    background: #ddd;
+    text-align: center;
+    padding:20px;
+    margin:10px;
+}
+
+/*垂直弹性布局*/
+.page{
+    height: 400px;
+    width: 100%;
+    border: 1px solid #ddd;
+    box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+}
+.page .flex-ver{
+    /*指定主轴的伸缩流方向是纵向的*/
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+    .nav-box,.btn-box{
+    height: 45px;
+    text-align: center;
+    line-height: 45px;
+}
+    .cont-box{
+    height: auto;
+    background: #ccc;
+    width: 100%;
+    overflow: scroll;
+    -webkit-overflow-scrolling : touch;
+}
+        </style>
+    </head>
+    <body>
+    <a href="https://isux.tencent.com/flexbox.html">https://isux.tencent.com/flexbox.html</a>
+        <!-- 1.用flex做提示icon -->
+        <h3 style="margin:0">1.用flex做提示icon</h3>
+        <div class="flex-cont flex-info">
+            <i class="f-icon"></i>
+            <div class="flex-item s-word">
+                <p class="s-desc">Description,xxx</p>
+                <p class="s-desc">test,test,test,test,test,test,test，test.hitest,test,test,test,</p>
+                <p class="s-desc">test,test,test,test,test,test,test</p>
+            </div>
+        </div>
+        <div class="flex-cont flex-info flex-info-center">
+            <i class="f-icon"></i>
+            <div class="flex-item s-word">
+                <p class="s-desc">Description,xxx</p>
+                <p class="s-desc">test,test,test,test,test,test,test，test.hitest,test,test,test,</p>
+                <p class="s-desc">test,test,test,test,test,test,test</p>
+            </div>
+        </div>
+
+        <!-- 2.用flex做列表元素 -->
+        <h3 style="margin:0">2.用flex做列表元素</h3>
+        <ul>
+            <li>
+                <div class="flex-cont flex-simple">
+                    <div class="s-img"></div>
+                    <div class="flex-item s-word">
+                        <p class="s-tit">title</p>
+                        <p class="s-desc">description</p>
+                    </div>
+                    <i class="f-icon"></i>
+                </div>
+            </li>
+            <li>
+                <div class="flex-cont flex-simple">
+                    <div class="s-img"></div>
+                    <div class="flex-item s-word">
+                        <p class="s-tit">title</p>
+                    </div>
+                    <i class="f-icon"></i>
+                </div>
+            </li>
+            <li>
+                <div class="flex-cont flex-simple">
+                    <div class="flex-item s-word">
+                        <p class="s-tit">title</p>
+                        <p class="s-desc">description</p>
+                    </div>
+                    <i class="f-icon"></i>
+                </div>
+            </li>
+        </ul>
+        <h3>3.用flex做tab</h3>
+        <ul role="tablist" class="flex-cont flex-tab">
+                <li class="current">
+                    <a href="javascript:void(0)"  role="tab">
+                        <span class="tab-title">title</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)"  role="tab">
+                        <span class="tab-title">title</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)"  role="tab">
+                        <span class="tab-title">long title</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)"  role="tab">
+                        <span class="tab-title">title</span>
+                    </a>
+                </li>
+        </ul>
+        <ul role="tablist" class="flex-cont flex-tab">
+                <li>
+                    <a href="javascript:void(0)"  role="tab">
+                        <span class="tab-title">long title</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)"  role="tab">
+                        <span class="tab-title">title</span>
+                    </a>
+                </li>
+        </ul>
+        <h3>4.用flex做导航(只适合三个布局)</h3>
+        <div class="flex-cont flex-nav">
+            <button class="f-btn">btn</button>
+        <div class="nav-title">
+            <h2>The big title</h2>
+            <p>infomation</p>
+        </div>            
+            <button class="f-btn">btn</button>
+        </div> 
+        <h3>5.用flex做搜索条</h3>
+        <div class="flex-cont flex-search">
+            <span>Search</span>
+            <div class="input"><input type="text"></div>
+            <button class="f-btn">btn</button>
+        </div>
+        <div class="flex-cont flex-search">
+            <div class="input"><input type="text"></div>
+            <button class="f-btn">btn</button>
+        </div>
+        <div class="flex-cont flex-search">
+            <i class="f-icon"></i>
+            <div class="input"><input type="text"></div>
+            <button class="f-btn">btn</button>
+        </div>
+
+        <h3>6.用flex做垂直居中(单/多)</h3>
+        <div class="flex-cont flex-centerbox">
+            <div class="center-cont">
+                <h2>Title</h2>
+                <p>infomation </p>
+                <p>infomation </p>
+                <button class="f-btn">btn</button>
+            </div>
+        </div>
+        <div class="flex-cont flex-centerbox">
+            <div class="center-cont">
+                <h2>Title</h2>
+                <p>infomation </p>
+                <p>infomation </p>
+                <button class="f-btn">btn</button>
+            </div>
+            <div class="center-cont">
+                <h2>Title</h2>
+                <p>infomation </p>
+                <p>infomation </p>
+                <button class="f-btn">btn</button>
+            </div>
+        </div>
+       
+
+        <h3>7.用flex做垂直弹性布局</h3>
+        <div class="page">
+            <div class="flex-cont flex-ver">
+                <div class="nav-box">
+                    title
+                </div>
+                <div class=" flex-item cont-box">
+                    content</br>content</br>content</br>content</br>content</br>content</br>content</br>content</br>content</br>content</br>content</br>content</br>
+                    content</br>content</br>content</br>content</br>content</br>content</br>content</br>content</br>content</br>content</br>content</br>content</br>
+                </div>
+                <div class="btn-box">
+                   <button class="f-btn">btn</button> 
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+
